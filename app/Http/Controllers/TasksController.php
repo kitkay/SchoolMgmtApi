@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Resources\TasksResource;
+use App\Models\Task;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TasksController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -13,17 +19,17 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return response()->json('Tested by Marvin');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        /**
+         * Calling a collection from our resource to be converted into a json.
+         *
+         *  We check based on `user_id`
+         *  it should be equal to Authenticated user grabing the id
+         *      by chaining id and get specific user.
+         *  then get all
+         */
+        return TasksResource::collection(
+            Task::where('user_id', Auth::user()->id)->get()
+        );
     }
 
     /**
@@ -32,9 +38,18 @@ class TasksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $storeRequest)
     {
-        //
+        $storeRequest->validated($storeRequest->all());
+
+        $task = Task::create([
+            'user_id' => Auth::user()->id,
+            'name' => $storeRequest->name,
+            'description' => $storeRequest->description,
+            'priority' => $storeRequest->priority
+        ]);
+
+        return new TasksResource($task);
     }
 
     /**
@@ -43,9 +58,16 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        if (Auth::user()->id !== $task->user_id) {
+            return $this->error(
+                '',
+                'You are not authorized to make this request',
+                403
+            );
+        }
+        return new TasksResource($task);
     }
 
     /**

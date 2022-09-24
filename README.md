@@ -36,13 +36,17 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 #### Created a Response Trait (for reuse to our controllers)
 #### Installed Sanctum with AuthController
 #### php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-#### php artisan make:request StoreUserRequest
+#### php artisan make:request LoginUserRequest
 
 #### php artisan make:request StoreUserRequest
 #### php artisan make:factory TaskFactory
 #### php artisan tinker
 ##### User::factory()->times(25)->create();
 ##### Task::factory()->times(250)->create();
+
+#### php artisan make:resource TasksResource
+##### - making resource is used to format collections into a json
+#### php artisan make:request StoreTaskRequest
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
