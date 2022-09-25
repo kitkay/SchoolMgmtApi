@@ -48,6 +48,11 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 ##### - making resource is used to format collections into a json
 
 #### php artisan make:request StoreTaskRequest
+
+#### adding token expiration on sanctum.php file "expiration"
+#### Edit Kernel.php from Console and add
+#####  $schedule->command('sanctum:prune-expired --hours=24')->daily();
+#### php artisan schedule:list
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
