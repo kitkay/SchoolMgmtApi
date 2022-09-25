@@ -46,6 +46,7 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 
 #### php artisan make:resource TasksResource
 ##### - making resource is used to format collections into a json
+
 #### php artisan make:request StoreTaskRequest
 ## License
 
