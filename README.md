@@ -7,22 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
-
-Tech Stack:
-    - Laravel as API
-    - Sanctum for Authentication
-    - php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-
-[
-    *echo "# SchoolMgmtApi" >> README.md
-    *git init
-    *git add README.md
-    *git commit -m "first commit"
-    *git branch -M main
-    *git remote add origin git@github.com:kitkay/SchoolMgmtApi.git
-    *git push -u origin main
-]
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
