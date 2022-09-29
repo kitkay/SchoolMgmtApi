@@ -5,13 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TasksResource;
 use App\Models\Task;
+use App\Services\TaskService;
 use App\Traits\HttpResponses;
+use Exception;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TasksController extends Controller
 {
     use HttpResponses;
+
+    /**
+     * Create Task Controller
+     *
+     * @param App\Service\TaskService $service
+     */
+    public function __construct(
+        private TaskService $service
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,17 +33,33 @@ class TasksController extends Controller
      */
     public function index()
     {
-        /**
-         * Calling a collection from our resource to be converted into a json.
-         *
-         *  We check based on `user_id`
-         *  it should be equal to Authenticated user grabing the id
-         *      by chaining id and get specific user.
-         *  then get all
-         */
-        return TasksResource::collection(
-            Task::where('user_id', Auth::user()->id)->get()
-        );
+        try {
+            if ($this->service) {
+
+                return HttpResponses::success(
+                    $this->service->all(),
+                    'Total list of task based on user.'
+                );
+            } else {
+
+                return HttpResponses::serverFailed(
+                    '',
+                    ''
+                );
+            }
+        } catch (Exception $e) {
+
+            return HttpResponses::error(
+                '',
+                'Cannot run fetching' . $e,
+                500
+            );
+        } catch (ServerException $se) {
+            return HttpResponses::serverFailed(
+                '',
+                ''
+            );
+        }
     }
 
     /**
@@ -60,7 +90,9 @@ class TasksController extends Controller
      */
     public function show(Task $task)
     {
-        return $this->isNotAuthorized($task) ? $this->isNotAuthorized($task) : new TasksResource($task);
+        return $this->isNotAuthorized($task)
+            ? $this->isNotAuthorized($task)
+            : new TasksResource($task);
     }
 
     /**
@@ -93,7 +125,9 @@ class TasksController extends Controller
     public function destroy(Task $task)
     {
         //Directly pass delte method We will not send task resource
-        return $this->isNotAuthorized($task) ? $this->isNotAuthorized($task) : $task->delete();
+        return $this->isNotAuthorized($task)
+            ? $this->isNotAuthorized($task)
+            : $task->delete();
     }
 
     private function isNotAuthorized(Task $task)

@@ -6,7 +6,7 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -61,10 +61,12 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::user()->currentAccessToken()->delete();
-
-        return $this->success([
-            'message' => 'You have successfully been logout and your token has been deleted.',
-        ]);
+        try {
+            Auth::user()->currentAccessToken()->delete();
+        } catch (Exception $e) {
+            return $this->success([
+                'message' => 'You have successfully been logout and your token has been deleted.',
+            ]);
+        }
     }
 }
